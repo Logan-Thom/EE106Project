@@ -2,11 +2,11 @@
 Python script to call from an external API and create a forecast for the 
 next 48 hours of carbon data in the UK.
 
-Created By: Logan Thom, Ricardo Barrera
+Created By: Logan Thom
 Created On: 26/01/24
 Created For: EE106 Project report
-Last Update: 09/02/24
-Updated By: Logan Thom, Ricardo Barrera
+Last Update: 14/02/24
+Updated By: Logan Thom
 """
 
 import requests
