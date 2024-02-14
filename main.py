@@ -16,20 +16,20 @@ import numpy as np
 from datetime import datetime, timezone, timedelta            #used to collect current date so as to not break API calls for previous data
 import random
 
-
+#required for the API call
 headers = {
     'Accept':'applications/json'
 }
 
 
-
+#creates or clears a file on which API data will be stored
 def InitialiseFile():
     file = open("data.csv","w")
     file.write("forecast,actual,index\n")
     file.close()
 
 
-
+#retruns average daily emmisions over past month
 def GetPreviousDataAverages():
     today_date = datetime.now(timezone.utc)                                                                             #store current date in variable
     past_date = today_date - timedelta(days = 25)
@@ -46,6 +46,10 @@ def GetPreviousDataAverages():
     return average_over_month
 
 
+
+#function to read only the last specified data values in the data file
+#very important to functionality of many forecasts
+#reads file backwards to a specified point from the end and returns a list of data
 def ReadSmallPreviousData(num):
     file = open("data.csv","r")
     lines = (file.readlines() [-num:])
@@ -57,7 +61,7 @@ def ReadSmallPreviousData(num):
     return previous_values
         
 
-
+#testing and debugging function, not used for main program
 def GetTestDataSet():
     r = requests.get('https://api.carbonintensity.org.uk/intensity/date/2024-01-10/24', params = {}, headers=headers)
     return r
@@ -103,7 +107,8 @@ def CollectData():
         
     return
 
-
+#adds forecasted values to numpy array used later by matplotlib
+#treturns a numpy array
 def CreateNumpyPlotArray(forecast):
     fs = open("data.csv","r")
     next(fs)
@@ -117,7 +122,8 @@ def CreateNumpyPlotArray(forecast):
     return y_axis
 
 
-
+#uses matplotlib to display data from previous 25 days and forecast for next 2 days
+#need to add means of labelling which type of forecast it used
 def DataGraph(y_axis):
 
     x_axis = np.linspace(-25, 2, len(y_axis))
@@ -131,10 +137,14 @@ def DataGraph(y_axis):
     return
 
 
+#data forecasting model
 def MovingAverage(previous_data_set):
     #does nothing currently
     return
-    
+
+
+#testing function to work matplotlib
+#not used in actual program
 def SimplePlot():
     x = np.linspace(0,2 * np.pi, 200)
     y = np.sin(x)
@@ -142,6 +152,8 @@ def SimplePlot():
     ax.plot(x,y)
     plt.show()
 
+
+#data forecasting model
 def AutoRegression(constant_term):
     #value = const + coeff*y-1 + coeff*y-2 + err
     #error term is white noise and completely random
@@ -154,7 +166,7 @@ def AutoRegression(constant_term):
     
     return
 
-
+#data forecasting model
 def SimpleExponentialSmoothing():
 
     #general form of future_term = a*yt + (1-a)*yt-1 + (1-a)**2 * yt-2 and so on
@@ -178,7 +190,8 @@ def SimpleExponentialSmoothing():
 
     return forecast_terms
 
-
+#main function, currently used to only call specific parts of the code for testing
+#will have all functionality called from here
 def main():
     #InitialiseFile()
     #CollectData()
@@ -196,5 +209,8 @@ def main():
 
 
 #this is a script
+#python standard is to include this in all scripts to make clear to other programmers and developers it is to be run
 if __name__=='__main__':
   main()
+
+
